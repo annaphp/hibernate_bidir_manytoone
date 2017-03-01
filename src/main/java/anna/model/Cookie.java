@@ -66,4 +66,39 @@ public class Cookie {
 		return "Cookie [id=" + id + ", flavour=" + flavour + ", size=" + size + "]";
 	}
 
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((flavour == null) ? 0 : flavour.hashCode());
+		result = prime * result + ((size == null) ? 0 : size.hashCode());
+		return result;
+	}
+
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Cookie other = (Cookie) obj;
+		if (flavour == null) {
+			if (other.flavour != null)
+				return false;
+		} else if (!flavour.equals(other.flavour))
+			return false;
+		if (size == null) {
+			if (other.size != null)
+				return false;
+		} else if (!size.equals(other.size))
+			return false;
+		return true;
+	}
+	
+	
+
 }

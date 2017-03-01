@@ -14,33 +14,49 @@ public class RepositoryTest {
 	
 	CookieRepository cookieRepo;
 	BoxRepository boxRepo;
-	Long cId;
-	Long bId;
+	Long cookieOneId;
+	Long cookieTwoId;
+	Long boxId;
 	
 	@Before
 	public void setup(){
 		cookieRepo = new CookieRepository();
 		boxRepo = new BoxRepository();
 
-		cId = cookieRepo.save(new Cookie("Chocolate", "large"));
-		bId = boxRepo.save(new Box("large", "Christmas Box"));	
+		cookieOneId = cookieRepo.save(new Cookie("Chocolate", "large"));
+		cookieTwoId = cookieRepo.save(new Cookie("Outmeal", "small"));
+		
+		boxId = boxRepo.save(new Box("large", "Christmas Box"));	
 	}
 	
 	@Test
 	public void shouldLinkCookieAndBox(){
-		Cookie cookie = cookieRepo.findCookieById(cId);
-		cookie.setBox(boxRepo.findBoxById(bId));
+		Cookie cookie = cookieRepo.findCookieById(cookieOneId);
+		cookie.setBox(boxRepo.findBoxById(boxId));
 		cookieRepo.update(cookie);
-		assertEquals(cookieRepo.findCookieById(cId).getBox(),boxRepo.findBoxById(bId));
+		assertEquals(cookieRepo.findCookieById(cookieOneId).getBox(),boxRepo.findBoxById(boxId));
 	}
 	
 	@Test
 	public void shouldAddCookiesToBox(){
-		Box box = boxRepo.findBoxById(bId);
-		Cookie cookie= cookieRepo.findCookieById(cId);
+		Box box = boxRepo.findBoxById(boxId);
+		
+		Cookie cookie= cookieRepo.findCookieById(cookieOneId);
+		// bidirectional linking
 		box.getCookies().add(cookie);
-		boxRepo.save(box);
-		assertTrue(boxRepo.findBoxById(bId).getCookies().contains(cookie));
+		cookie.setBox(box);
+		cookieRepo.update(cookie);
+		
+		Cookie cookie2 = cookieRepo.findCookieById(cookieTwoId);
+		// bidirectional linking
+		box.getCookies().add(cookie2);
+		cookie2.setBox(box);
+		cookieRepo.update(cookie2);
+		
+	//	boxRepo.update(box);
+		assertTrue(boxRepo.findBoxById(boxId).getCookies().contains(cookie));
+		assertTrue(boxRepo.findBoxById(boxId).getCookies().contains(cookie2));
+
 	}
 	
 }

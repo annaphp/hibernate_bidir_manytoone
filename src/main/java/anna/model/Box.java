@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -17,7 +18,7 @@ public class Box {
 	private String size;
 	private String name;
 	
-	@OneToMany(mappedBy="box")
+	@OneToMany(mappedBy="box",fetch = FetchType.EAGER)
 	private Set<Cookie> cookies = new HashSet<>();
 	
 	public Box(String size, String name) {
@@ -59,10 +60,6 @@ public class Box {
 		this.name = name;
 	}
 
-	@Override
-	public String toString() {
-		return "Box [id=" + id + ", size=" + size + ", name=" + name + "]";
-	}
 
 	@Override
 	public int hashCode() {
@@ -94,6 +91,12 @@ public class Box {
 			return false;
 		return true;
 	}
+
+	@Override
+	public String toString() {
+		return "Box [id=" + id + ", size=" + size + ", name=" + name + ", cookies=" + cookies + "]";
+	}
+	
 	
 	
 }
